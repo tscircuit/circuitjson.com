@@ -2,6 +2,9 @@
   "name": "circuitjson.com",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "start": "vite"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@tscircuit/runframe": "^0.0.89",
@@ -9,13 +12,17 @@
     "@types/react": "^19.0.5",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
+    "class-variance-authority": "^0.7.1",
     "lucide-react": "^0.471.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "18",
+    "react-dom": "18",
     "vite": "^6.0.7",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "zustand": "^5.0.3"
   }
 }
