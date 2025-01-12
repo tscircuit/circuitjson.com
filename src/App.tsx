@@ -89,6 +89,39 @@ export const App = () => {
           </div>
         </div>
       )}
+      <div className="fixed bottom-4 left-0 right-0 text-center text-gray-400 text-sm">
+        <p>
+          Circuit JSON Viewer by{" "}
+          <a
+            href="https://github.com/tscircuit/tscircuit"
+            className="text-blue-400 hover:text-blue-300"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            tscircuit
+          </a>
+          , get the{" "}
+          <a
+            href="https://github.com/tscircuit/circuit-json"
+            className="text-blue-400 hover:text-blue-300"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            source code here
+          </a>
+        </p>
+        <a
+          href="https://github.com/tscircuit/circuit-json"
+          className="inline-block mt-2"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://img.shields.io/github/stars/tscircuit/circuit-json?style=social"
+            alt="GitHub stars"
+          />
+        </a>
+      </div>
     </div>
   )
 }
