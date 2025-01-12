@@ -47,7 +47,7 @@ export const App = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-4"
+      className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4"
       onDrop={handleDrop}
       onDragOver={(e) => e.preventDefault()}
     >
@@ -89,6 +89,15 @@ export const App = () => {
           </div>
         </div>
       )}
+      <p className="text-gray-400 mt-4">
+        Download{" "}
+        <a
+          href="/assets/usb-c-flashlight.json"
+          className="text-blue-400 hover:text-blue-300"
+        >
+          example circuit json file
+        </a>
+      </p>
       <div className="fixed bottom-4 left-0 right-0 text-center text-gray-400 text-sm">
         <p>
           Circuit JSON Viewer by{" "}
