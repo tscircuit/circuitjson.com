@@ -27,6 +27,24 @@ export const App = () => {
     [setCircuitJson],
   )
 
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.files?.length) return
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target?.result as string)
+          setCircuitJson(json)
+        } catch (err) {
+          console.error("Failed to parse JSON:", err)
+        }
+      }
+      reader.readAsText(file)
+    },
+    [setCircuitJson],
+  )
+
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-4"
@@ -37,9 +55,21 @@ export const App = () => {
         <div className="flex flex-col text-center">
           <h1 className="text-3xl font-bold mb-8">Circuit JSON Viewer</h1>
           <div className="border-2 border-dashed border-gray-500 rounded-lg p-12">
-            <p className="text-gray-400">
+            <p className="text-gray-400 mb-4">
               Drag and drop a circuit JSON file here
             </p>
+            <p className="text-gray-400">or</p>
+            <label className="mt-4 cursor-pointer inline-block">
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+              <span className="bg-gray-700 px-4 py-2 rounded-md hover:bg-gray-600 transition-colors">
+                Choose File
+              </span>
+            </label>
           </div>
         </div>
       ) : (
