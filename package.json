@@ -7,7 +7,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@tscircuit/runframe": "^0.0.129",
+    "@tscircuit/runframe": "^0.0.130",
     "@types/bun": "latest",
     "@types/react": "^19.0.5",
     "@types/react-dom": "^19.0.3",
