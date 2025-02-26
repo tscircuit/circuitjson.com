@@ -1,11 +1,33 @@
 import { useCallback } from "react"
 import { useStore } from "./store"
 import { CircuitJsonPreview } from "@tscircuit/runframe"
+import type { AnyCircuitElement } from "circuit-json"
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
   const setCircuitJson = useStore((s) => s.setCircuitJson)
   const reset = useStore((s) => s.reset)
+
+  const convertSimpleRouteJsonToCircuitJson = (simpleRouteJson: any): AnyCircuitElement[] => {
+    const circuitJson: AnyCircuitElement[] = []
+
+    for (const connection of simpleRouteJson.connections) {
+      const trace: AnyCircuitElement = {
+        type: "pcb_trace",
+        pcb_trace_id: connection.name,
+        route: connection.pointsToConnect.map(point => ({
+          route_type: "wire",
+          x: point.x,
+          y: point.y,
+          layer: point.layer,
+          width: simpleRouteJson.minTraceWidth,
+        })),
+      }
+      circuitJson.push(trace)
+    }
+
+    return circuitJson
+  }
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -16,7 +38,12 @@ export const App = () => {
         reader.onload = (e) => {
           try {
             const json = JSON.parse(e.target?.result as string)
-            setCircuitJson(json)
+            if (json.connections && json.minTraceWidth !== undefined) {
+              const circuitJson = convertSimpleRouteJsonToCircuitJson(json)
+              setCircuitJson(circuitJson)
+            } else {
+              setCircuitJson(json)
+            }
           } catch (err) {
             console.error("Failed to parse JSON:", err)
           }
@@ -35,7 +62,12 @@ export const App = () => {
       reader.onload = (e) => {
         try {
           const json = JSON.parse(e.target?.result as string)
-          setCircuitJson(json)
+          if (json.connections && json.minTraceWidth !== undefined) {
+            const circuitJson = convertSimpleRouteJsonToCircuitJson(json)
+            setCircuitJson(circuitJson)
+          } else {
+            setCircuitJson(json)
+          }
         } catch (err) {
           console.error("Failed to parse JSON:", err)
         }
