@@ -2,13 +2,14 @@ import { useCallback } from "react"
 import { useStore } from "./store"
 import { CircuitJsonPreview } from "@tscircuit/runframe"
 import type { AnyCircuitElement } from "circuit-json"
+import type { SimpleRouteJson } from "./SimpleRouteJson"
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
   const setCircuitJson = useStore((s) => s.setCircuitJson)
   const reset = useStore((s) => s.reset)
 
-  const convertSimpleRouteJsonToCircuitJson = (simpleRouteJson: any): AnyCircuitElement[] => {
+  const convertSimpleRouteJsonToCircuitJson = (simpleRouteJson: SimpleRouteJson): AnyCircuitElement[] => {
     const circuitJson: AnyCircuitElement[] = []
 
     for (const connection of simpleRouteJson.connections) {
