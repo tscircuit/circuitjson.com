@@ -125,7 +125,7 @@ export const App = () => {
       <p className="text-gray-400 mt-4">
         Download{" "}
         <a
-          href="/assets/usb-c-flashlight.json"
+          href="/public/usb-c-flashlight.json"
           className="text-blue-400 hover:text-blue-300"
         >
           example circuit json file
