@@ -2,7 +2,7 @@ import { useCallback } from "react"
 import { useStore } from "./store"
 import { CircuitJsonPreview } from "@tscircuit/runframe"
 import type { AnyCircuitElement } from "circuit-json"
-import type { SimpleRouteJson } from "./SimpleRouteJson"
+import type { SimpleRouteJson } from "@tscircuit/core"
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
@@ -20,7 +20,7 @@ export const App = () => {
           route_type: "wire",
           x: point.x,
           y: point.y,
-          layer: point.layer,
+          layer: point.layer as "top" | "bottom" | "inner1" | "inner2" | "inner3" | "inner4" | "inner5" | "inner6",
           width: simpleRouteJson.minTraceWidth,
         })),
       }
