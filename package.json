@@ -23,7 +23,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@tscircuit/core": "^0.0.352",
+    "@tscircuit/core": "^0.0.353",
     "circuit-json": "^0.0.144",
     "zustand": "^5.0.3"
   }
