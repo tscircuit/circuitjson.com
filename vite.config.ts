@@ -12,8 +12,33 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: true,
+    rollupOptions: {
+      external: [
+        // Exclude Node.js native modules from browser bundle
+        'fs',
+        'path',
+        'child_process',
+      ],
+    },
   },
   define: {
     global: "globalThis",
-  }
+  },
+  optimizeDeps: {
+    exclude: [
+      '@resvg/resvg-js',
+      'posthog-node',
+    ],
+    esbuildOptions: {
+      define: {
+        global: 'globalThis',
+      },
+    },
+  },
+  resolve: {
+    alias: {
+      // Use the WASM version instead of the native Node.js version for browser builds
+      '@resvg/resvg-js': '@resvg/resvg-wasm',
+    },
+  },
 })
