@@ -15,5 +15,5 @@ export default defineConfig({
   },
   define: {
     global: "globalThis",
-  },
+  }
 })
