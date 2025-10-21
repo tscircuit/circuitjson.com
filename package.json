@@ -3,11 +3,12 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "format": "biome format --write src tsconfig.json package.json"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@tscircuit/runframe": "^0.0.347",
+    "@tscircuit/runframe": "^0.0.1133",
     "@types/bun": "latest",
     "@types/react": "^19.0.5",
     "@types/react-dom": "^19.0.3",
@@ -23,8 +24,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@tscircuit/core": "^0.0.390",
-    "circuit-json": "^0.0.144",
+    "@tscircuit/core": "^0.0.811",
+    "circuit-json": "^0.0.289",
     "zustand": "^5.0.3"
   }
 }
