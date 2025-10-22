@@ -16,4 +16,10 @@ export default defineConfig({
   define: {
     global: "globalThis",
   },
+  resolve: {
+    alias: {
+      "@resvg/resvg-js": "@resvg/resvg-wasm",
+      buffer: "buffer/",
+    },
+  },
 })

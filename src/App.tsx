@@ -2,7 +2,7 @@ import { useCallback } from "react"
 import { useStore } from "./store"
 import { CircuitJsonPreview } from "@tscircuit/runframe"
 import type { AnyCircuitElement } from "circuit-json"
-import type { SimpleRouteJson } from "@tscircuit/core"
+import type { SimpleRouteJson } from "tscircuit"
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
