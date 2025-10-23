@@ -80,7 +80,7 @@ export const App = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4"
+      className="h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4"
       onDrop={handleDrop}
       onDragOver={(e) => e.preventDefault()}
     >
@@ -106,7 +106,7 @@ export const App = () => {
           </div>
         </div>
       ) : (
-        <div className="w-full h-full">
+        <div className="w-full h-full flex flex-col">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold">Circuit JSON Viewer</h1>
             <button
@@ -117,7 +117,7 @@ export const App = () => {
               Reset
             </button>
           </div>
-          <div className="bg-gray-800/50 p-4 rounded-md">
+          <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
             <CircuitJsonPreview circuitJson={circuitJson} />
           </div>
         </div>
