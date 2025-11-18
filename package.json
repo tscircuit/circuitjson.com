@@ -25,9 +25,9 @@
   },
   "dependencies": {
     "buffer": "^6.0.3",
-    "circuit-json": "^0.0.289",
+    "circuit-json": "^0.0.315",
     "three": "^0.165.0",
-    "tscircuit": "^0.0.802",
+    "tscircuit": "^0.0.910",
     "zustand": "^5.0.8"
   }
 }

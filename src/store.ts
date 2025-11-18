@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from "zustand"
 
 interface Store {
   circuitJson: any | null
@@ -9,5 +9,5 @@ interface Store {
 export const useStore = create<Store>((set) => ({
   circuitJson: null,
   setCircuitJson: (json) => set({ circuitJson: json }),
-  reset: () => set({ circuitJson: null })
+  reset: () => set({ circuitJson: null }),
 }))
