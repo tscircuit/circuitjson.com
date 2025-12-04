@@ -9,18 +9,28 @@ export const App = () => {
   const setCircuitJson = useStore((s) => s.setCircuitJson)
   const reset = useStore((s) => s.reset)
 
-  const convertSimpleRouteJsonToCircuitJson = (simpleRouteJson: SimpleRouteJson): AnyCircuitElement[] => {
+  const convertSimpleRouteJsonToCircuitJson = (
+    simpleRouteJson: SimpleRouteJson,
+  ): AnyCircuitElement[] => {
     const circuitJson: AnyCircuitElement[] = []
 
     for (const connection of simpleRouteJson.connections) {
       const trace: AnyCircuitElement = {
         type: "pcb_trace",
         pcb_trace_id: connection.name,
-        route: connection.pointsToConnect.map(point => ({
+        route: connection.pointsToConnect.map((point) => ({
           route_type: "wire",
           x: point.x,
           y: point.y,
-          layer: point.layer as "top" | "bottom" | "inner1" | "inner2" | "inner3" | "inner4" | "inner5" | "inner6",
+          layer: point.layer as
+            | "top"
+            | "bottom"
+            | "inner1"
+            | "inner2"
+            | "inner3"
+            | "inner4"
+            | "inner5"
+            | "inner6",
           width: simpleRouteJson.minTraceWidth,
         })),
       }
@@ -153,7 +163,7 @@ export const App = () => {
           </a>
         </p>
         <a
-          href="https://github.com/tscircuit/circuit-json"
+          href="https://github.com/tscircuit/circuitjson.com"
           className="inline-block mt-2"
           target="_blank"
           rel="noopener noreferrer"
