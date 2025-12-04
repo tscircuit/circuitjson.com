@@ -154,7 +154,7 @@ export const App = () => {
           </a>
           , get the{" "}
           <a
-            href="https://github.com/tscircuit/circuitjson.com"
+            href="https://github.com/tscircuit/circuit-json"
             className="text-blue-400 hover:text-blue-300"
             target="_blank"
             rel="noopener noreferrer"
