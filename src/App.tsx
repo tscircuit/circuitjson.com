@@ -1,8 +1,41 @@
-import { useCallback } from "react"
+import { Suspense, lazy, useCallback } from "react"
 import { useStore } from "./store"
-import { CircuitJsonPreview } from "@tscircuit/runframe"
-import type { AnyCircuitElement } from "circuit-json"
-import type { SimpleRouteJson } from "tscircuit"
+
+type Layer =
+  | "top"
+  | "bottom"
+  | "inner1"
+  | "inner2"
+  | "inner3"
+  | "inner4"
+  | "inner5"
+  | "inner6"
+
+type AnyCircuitElement = Record<string, unknown>
+
+type SimpleRoutePoint = {
+  x: number
+  y: number
+  layer: Layer
+}
+
+type SimpleRouteConnection = {
+  name: string
+  pointsToConnect: SimpleRoutePoint[]
+}
+
+type SimpleRouteJson = {
+  connections: SimpleRouteConnection[]
+  minTraceWidth: number
+}
+
+const CircuitJsonPreview = lazy(async () => {
+  const module = await import(
+    /* @vite-ignore */ "https://cdn.jsdelivr.net/npm/@tscircuit/runframe@latest/+esm"
+  )
+
+  return { default: module.CircuitJsonPreview }
+})
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
@@ -22,15 +55,7 @@ export const App = () => {
           route_type: "wire",
           x: point.x,
           y: point.y,
-          layer: point.layer as
-            | "top"
-            | "bottom"
-            | "inner1"
-            | "inner2"
-            | "inner3"
-            | "inner4"
-            | "inner5"
-            | "inner6",
+          layer: point.layer,
           width: simpleRouteJson.minTraceWidth,
         })),
       }
@@ -128,7 +153,11 @@ export const App = () => {
             </button>
           </div>
           <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
-            <CircuitJsonPreview circuitJson={circuitJson} />
+            <Suspense
+              fallback={<div className="text-gray-300">Loading preview...</div>}
+            >
+              <CircuitJsonPreview circuitJson={circuitJson} />
+            </Suspense>
           </div>
         </div>
       )}
