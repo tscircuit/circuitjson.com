@@ -31,13 +31,8 @@
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tabs": "^1.1.13",
-    "@tscircuit/3d-viewer": "^0.0.450",
-    "@tscircuit/assembly-viewer": "^0.0.5",
-    "@tscircuit/create-snippet-url": "^0.0.13",
-    "@tscircuit/pcb-viewer": "^1.11.275",
-    "@tscircuit/schematic-viewer": "^2.0.49",
     "buffer": "^6.0.3",
-    "circuit-json": "^0.0.326",
+    "circuit-json": "^0.0.383",
     "circuit-json-to-bom-csv": "^0.0.8",
     "circuit-json-to-gerber": "^0.0.44",
     "circuit-json-to-kicad": "^0.0.27",
@@ -56,7 +51,6 @@
     "stepts": "^0.0.1",
     "tailwind-merge": "^3.4.0",
     "three": "^0.165.0",
-    "tscircuit": "^0.0.1012",
     "zustand": "^5.0.8"
   }
 }
