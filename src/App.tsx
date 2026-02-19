@@ -1,13 +1,66 @@
-import { useCallback } from "react"
-import { useStore } from "./store"
-import { CircuitJsonPreview } from "@tscircuit/runframe"
+import { useCallback, useEffect, useState, type ComponentType } from "react"
 import type { AnyCircuitElement } from "circuit-json"
-import type { SimpleRouteJson } from "tscircuit"
+import { useStore } from "./store"
+
+type SimpleRouteJson = {
+  minTraceWidth: number
+  connections: Array<{
+    name: string
+    pointsToConnect: Array<{
+      x: number
+      y: number
+      layer: string
+    }>
+  }>
+}
+
+type CircuitJsonPreviewComponent = ComponentType<{
+  circuitJson: AnyCircuitElement[]
+}>
 
 export const App = () => {
+  const [CircuitJsonPreview, setCircuitJsonPreview] =
+    useState<CircuitJsonPreviewComponent | null>(null)
+  const [previewLoadError, setPreviewLoadError] = useState<string | null>(null)
+
   const circuitJson = useStore((s) => s.circuitJson)
   const setCircuitJson = useStore((s) => s.setCircuitJson)
   const reset = useStore((s) => s.reset)
+
+  useEffect(() => {
+    const runframeUrl = "https://cdn.jsdelivr.net/npm/@tscircuit/runframe/+esm"
+    let isMounted = true
+
+    const loadRunframe = async () => {
+      try {
+        const module = (await import(/* @vite-ignore */ runframeUrl)) as {
+          CircuitJsonPreview?: CircuitJsonPreviewComponent
+        }
+
+        if (!module.CircuitJsonPreview) {
+          throw new Error("CircuitJsonPreview export not found")
+        }
+
+        if (isMounted) {
+          setCircuitJsonPreview(
+            () => module.CircuitJsonPreview as CircuitJsonPreviewComponent,
+          )
+        }
+      } catch (error) {
+        if (isMounted) {
+          const message =
+            error instanceof Error ? error.message : "Unknown import error"
+          setPreviewLoadError(message)
+        }
+      }
+    }
+
+    loadRunframe()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const convertSimpleRouteJsonToCircuitJson = (
     simpleRouteJson: SimpleRouteJson,
@@ -128,7 +181,16 @@ export const App = () => {
             </button>
           </div>
           <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
-            <CircuitJsonPreview circuitJson={circuitJson} />
+            {previewLoadError ? (
+              <p className="text-red-400">
+                Failed to load tscircuit preview from jsDelivr:{" "}
+                {previewLoadError}
+              </p>
+            ) : CircuitJsonPreview ? (
+              <CircuitJsonPreview circuitJson={circuitJson} />
+            ) : (
+              <p className="text-gray-400">Loading latest tscircuit preview…</p>
+            )}
           </div>
         </div>
       )}
