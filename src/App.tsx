@@ -31,31 +31,8 @@ export const App = () => {
   const setCircuitJson = useStore((s) => s.setCircuitJson)
   const reset = useStore((s) => s.reset)
 
-  useEffect(() => {
-    const onMessage = (event: MessageEvent) => {
-      if (event.data?.runframe_type === "runframe_ready_to_receive") {
-        setIsRunframeReady(true)
-      }
-
-      if (
-        event.data?.runframe_type === "runframe_event" &&
-        event.data.runframe_event?.type === "error"
-      ) {
-        console.error(event.data.runframe_event.error_message)
-      }
-    }
-
-    window.addEventListener("message", onMessage)
-
-    return () => window.removeEventListener("message", onMessage)
-  }, [])
-
-  useEffect(() => {
-    if (
-      !circuitJson ||
-      !isRunframeReady ||
-      !runframeIframeRef.current?.contentWindow
-    ) {
+  const sendCircuitJsonToRunframe = useCallback(() => {
+    if (!circuitJson || !runframeIframeRef.current?.contentWindow) {
       return
     }
 
@@ -70,7 +47,48 @@ export const App = () => {
       },
       "*",
     )
-  }, [circuitJson, isRunframeReady])
+  }, [circuitJson])
+
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (event.data?.runframe_type === "runframe_ready_to_receive") {
+        setIsRunframeReady(true)
+        sendCircuitJsonToRunframe()
+      }
+
+      if (
+        event.data?.runframe_type === "runframe_event" &&
+        event.data.runframe_event?.type === "error"
+      ) {
+        console.error(event.data.runframe_event.error_message)
+      }
+    }
+
+    window.addEventListener("message", onMessage)
+
+    return () => window.removeEventListener("message", onMessage)
+  }, [sendCircuitJsonToRunframe])
+
+  useEffect(() => {
+    if (!circuitJson || !isRunframeReady) {
+      return
+    }
+
+    sendCircuitJsonToRunframe()
+
+    const maxRetries = 10
+    let attempts = 0
+    const retryInterval = window.setInterval(() => {
+      attempts += 1
+      sendCircuitJsonToRunframe()
+
+      if (attempts >= maxRetries) {
+        window.clearInterval(retryInterval)
+      }
+    }, 300)
+
+    return () => window.clearInterval(retryInterval)
+  }, [circuitJson, isRunframeReady, sendCircuitJsonToRunframe])
 
   const convertSimpleRouteJsonToCircuitJson = (
     simpleRouteJson: SimpleRouteJson,
@@ -85,15 +103,7 @@ export const App = () => {
           route_type: "wire",
           x: point.x,
           y: point.y,
-          layer: point.layer as
-            | "top"
-            | "bottom"
-            | "inner1"
-            | "inner2"
-            | "inner3"
-            | "inner4"
-            | "inner5"
-            | "inner6",
+          layer: point.layer,
           width: simpleRouteJson.minTraceWidth,
         })),
       }
