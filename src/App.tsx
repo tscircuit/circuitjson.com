@@ -31,7 +31,7 @@ type SimpleRouteJson = {
 
 const CircuitJsonPreview = lazy(async () => {
   const module = await import(
-    /* @vite-ignore */ "https://cdn.jsdelivr.net/npm/@tscircuit/runframe@latest/+esm"
+    /* @vite-ignore */ "https://cdn.jsdelivr.net/npm/@tscircuit/runframe@latest/dist/preview.js/+esm"
   )
 
   return { default: module.CircuitJsonPreview }
