@@ -1,13 +1,14 @@
-import { useCallback } from "react"
-import { useStore } from "./store"
-import { CircuitJsonPreview } from "@tscircuit/runframe"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { AnyCircuitElement } from "circuit-json"
 import type { SimpleRouteJson } from "tscircuit"
+import { useStore } from "./store"
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
   const setCircuitJson = useStore((s) => s.setCircuitJson)
   const reset = useStore((s) => s.reset)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const [runframeReady, setRunframeReady] = useState(false)
 
   const convertSimpleRouteJsonToCircuitJson = (
     simpleRouteJson: SimpleRouteJson,
@@ -39,6 +40,46 @@ export const App = () => {
 
     return circuitJson
   }
+
+  const circuitJsonFileContent = useMemo(
+    () =>
+      circuitJson
+        ? JSON.stringify(
+            Array.isArray(circuitJson) ? circuitJson : [circuitJson],
+          )
+        : null,
+    [circuitJson],
+  )
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.runframe_type === "runframe_ready_to_receive") {
+        setRunframeReady(true)
+      }
+    }
+
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [])
+
+  useEffect(() => {
+    if (!runframeReady || !circuitJsonFileContent) return
+
+    iframeRef.current?.contentWindow?.postMessage(
+      {
+        runframe_type: "runframe_props_changed",
+        runframe_props: {
+          fsMap: {
+            "main.circuit.json": circuitJsonFileContent,
+          },
+          mainComponentPath: "main.circuit.json",
+          availableTabs: ["pcb", "schematic", "cad"],
+          defaultTab: "schematic",
+        },
+      },
+      "*",
+    )
+  }, [runframeReady, circuitJsonFileContent])
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -128,7 +169,12 @@ export const App = () => {
             </button>
           </div>
           <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
-            <CircuitJsonPreview circuitJson={circuitJson} />
+            <iframe
+              ref={iframeRef}
+              src="https://runframe.tscircuit.com/iframe.html"
+              title="circuit json preview"
+              className="w-full h-full border-0 rounded-md"
+            />
           </div>
         </div>
       )}
