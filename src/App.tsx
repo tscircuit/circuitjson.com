@@ -69,10 +69,12 @@ export const App = () => {
       {
         runframe_type: "runframe_props_changed",
         runframe_props: {
+          isWebEmbedded: true,
           fsMap: {
             "main.circuit.json": circuitJsonFileContent,
           },
           mainComponentPath: "main.circuit.json",
+          entrypoint: "main.circuit.json",
           availableTabs: ["pcb", "schematic", "cad"],
           defaultTab: "schematic",
         },
@@ -174,6 +176,7 @@ export const App = () => {
               src="https://runframe.tscircuit.com/iframe.html"
               title="circuit json preview"
               className="w-full h-full border-0 rounded-md"
+              onLoad={() => setRunframeReady(true)}
             />
           </div>
         </div>
