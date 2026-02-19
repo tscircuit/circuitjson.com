@@ -1,13 +1,76 @@
-import { useCallback } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useStore } from "./store"
-import { CircuitJsonPreview } from "@tscircuit/runframe"
 import type { AnyCircuitElement } from "circuit-json"
-import type { SimpleRouteJson } from "tscircuit"
+
+type PcbLayer =
+  | "top"
+  | "bottom"
+  | "inner1"
+  | "inner2"
+  | "inner3"
+  | "inner4"
+  | "inner5"
+  | "inner6"
+
+interface SimpleRouteJson {
+  minTraceWidth: number
+  connections: Array<{
+    name: string
+    pointsToConnect: Array<{
+      x: number
+      y: number
+      layer: PcbLayer
+    }>
+  }>
+}
 
 export const App = () => {
+  const runframeIframeRef = useRef<HTMLIFrameElement>(null)
+  const [isRunframeReady, setIsRunframeReady] = useState(false)
   const circuitJson = useStore((s) => s.circuitJson)
   const setCircuitJson = useStore((s) => s.setCircuitJson)
   const reset = useStore((s) => s.reset)
+
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (event.data?.runframe_type === "runframe_ready_to_receive") {
+        setIsRunframeReady(true)
+      }
+
+      if (
+        event.data?.runframe_type === "runframe_event" &&
+        event.data.runframe_event?.type === "error"
+      ) {
+        console.error(event.data.runframe_event.error_message)
+      }
+    }
+
+    window.addEventListener("message", onMessage)
+
+    return () => window.removeEventListener("message", onMessage)
+  }, [])
+
+  useEffect(() => {
+    if (
+      !circuitJson ||
+      !isRunframeReady ||
+      !runframeIframeRef.current?.contentWindow
+    ) {
+      return
+    }
+
+    runframeIframeRef.current.contentWindow.postMessage(
+      {
+        runframe_type: "runframe_props_changed",
+        runframe_props: {
+          circuitJson,
+          availableTabs: ["pcb", "schematic", "cad"],
+          defaultTab: "pcb",
+        },
+      },
+      "*",
+    )
+  }, [circuitJson, isRunframeReady])
 
   const convertSimpleRouteJsonToCircuitJson = (
     simpleRouteJson: SimpleRouteJson,
@@ -128,7 +191,12 @@ export const App = () => {
             </button>
           </div>
           <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
-            <CircuitJsonPreview circuitJson={circuitJson} />
+            <iframe
+              ref={runframeIframeRef}
+              src="https://runframe.tscircuit.com/iframe.html"
+              title="RunFrame Preview"
+              className="w-full h-full border-0 rounded-md"
+            />
           </div>
         </div>
       )}
