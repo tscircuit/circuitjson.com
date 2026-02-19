@@ -1,8 +1,14 @@
-import { useCallback } from "react"
+import { Suspense, lazy, useCallback } from "react"
 import { useStore } from "./store"
-import { CircuitJsonPreview } from "@tscircuit/runframe"
 import type { AnyCircuitElement } from "circuit-json"
 import type { SimpleRouteJson } from "tscircuit"
+
+const CircuitJsonPreview = lazy(async () => {
+  const module = await import(
+    "https://cdn.jsdelivr.net/npm/@tscircuit/runframe/+esm"
+  )
+  return { default: module.CircuitJsonPreview }
+})
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
@@ -128,7 +134,11 @@ export const App = () => {
             </button>
           </div>
           <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
-            <CircuitJsonPreview circuitJson={circuitJson} />
+            <Suspense
+              fallback={<div className="text-gray-400">Loading viewer...</div>}
+            >
+              <CircuitJsonPreview circuitJson={circuitJson} />
+            </Suspense>
           </div>
         </div>
       )}
