@@ -1,8 +1,27 @@
 import { useCallback } from "react"
-import { useStore } from "./store"
-import { CircuitJsonPreview } from "@tscircuit/runframe"
 import type { AnyCircuitElement } from "circuit-json"
-import type { SimpleRouteJson } from "tscircuit"
+import { TscircuitIframe } from "./TscircuitIframe"
+import { useStore } from "./store"
+
+type SimpleRouteJson = {
+  minTraceWidth: number
+  connections: Array<{
+    name: string
+    pointsToConnect: Array<{
+      x: number
+      y: number
+      layer:
+        | "top"
+        | "bottom"
+        | "inner1"
+        | "inner2"
+        | "inner3"
+        | "inner4"
+        | "inner5"
+        | "inner6"
+    }>
+  }>
+}
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
@@ -22,15 +41,7 @@ export const App = () => {
           route_type: "wire",
           x: point.x,
           y: point.y,
-          layer: point.layer as
-            | "top"
-            | "bottom"
-            | "inner1"
-            | "inner2"
-            | "inner3"
-            | "inner4"
-            | "inner5"
-            | "inner6",
+          layer: point.layer,
           width: simpleRouteJson.minTraceWidth,
         })),
       }
@@ -128,7 +139,7 @@ export const App = () => {
             </button>
           </div>
           <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
-            <CircuitJsonPreview circuitJson={circuitJson} />
+            <TscircuitIframe circuitJson={circuitJson} />
           </div>
         </div>
       )}
