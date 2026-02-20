@@ -3,6 +3,7 @@ import { useStore } from "./store"
 import { CircuitJsonPreview } from "@tscircuit/runframe"
 import type { AnyCircuitElement } from "circuit-json"
 import type { SimpleRouteJson } from "tscircuit"
+import { ErrorBoundary } from "react-error-boundary"
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
@@ -181,7 +182,35 @@ export const App = () => {
             </button>
           </div>
           <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
-            <CircuitJsonPreview circuitJson={circuitJson} />
+            <ErrorBoundary
+              fallbackRender={({ error, resetErrorBoundary }) => (
+                <div className="h-full flex flex-col items-center justify-center p-6 text-center">
+                  <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-6 max-w-lg w-full">
+                    <h3 className="text-xl font-bold text-red-400 mb-2">
+                      Error Rendering Circuit
+                    </h3>
+                    <p className="text-gray-300 text-sm mb-4">
+                      The provided Circuit JSON could not be rendered.
+                    </p>
+                    <div className="bg-gray-950 p-4 rounded text-left overflow-auto mb-4 border border-red-900/30 text-red-300 font-mono text-xs max-h-40 break-words whitespace-pre-wrap">
+                      {error.message}
+                    </div>
+                    <button
+                      onClick={() => {
+                        resetErrorBoundary()
+                        reset()
+                      }}
+                      className="bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-200 px-4 py-2 rounded-md focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-red-400 transition-colors font-medium w-full sm:w-auto"
+                      type="button"
+                    >
+                      Reset Viewer
+                    </button>
+                  </div>
+                </div>
+              )}
+            >
+              <CircuitJsonPreview circuitJson={circuitJson} />
+            </ErrorBoundary>
           </div>
         </div>
       )}
