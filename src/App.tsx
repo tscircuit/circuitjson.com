@@ -193,7 +193,7 @@ export const App = () => {
                       The provided Circuit JSON could not be rendered.
                     </p>
                     <div className="bg-gray-950 p-4 rounded text-left overflow-auto mb-4 border border-red-900/30 text-red-300 font-mono text-xs max-h-40 break-words whitespace-pre-wrap">
-                      {error.message}
+                      {error instanceof Error ? error.message : String(error)}
                     </div>
                     <button
                       onClick={() => {
