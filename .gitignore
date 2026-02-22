@@ -176,4 +176,4 @@ dist
 .aider*
 .vercel
 .agent
-.agents
+.agentsbun.lock
