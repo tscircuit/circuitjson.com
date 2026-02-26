@@ -177,3 +177,5 @@ dist
 .vercel
 .agent
 .agents
+# lockfile disabled for reproducible Vercel deploy flow in bounty #79
+bun.lock
