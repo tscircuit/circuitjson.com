@@ -11,7 +11,7 @@ export default defineConfig({
   },
   build: {
     outDir: "dist",
-    sourcemap: true,
+    sourcemap: false,
   },
   define: {
     global: "globalThis",
