@@ -177,3 +177,6 @@ dist
 .vercel
 .agent
 .agents
+# Bun lockfile (disabled via bunfig.toml)
+bun.lock
+bun.lockb
