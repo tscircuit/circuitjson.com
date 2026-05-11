@@ -1,0 +1,51 @@
+{
+    "layerCount": 2,
+    "minTraceWidth": 0.5,
+    "obstacles": [
+      {
+        "type": "rect",
+        "layers": ["top", "bottom"],
+        "center": { "x": 50, "y": 50 },
+        "width": 10,
+        "height": 20,
+        "connectedTo": ["net1", "net2"]
+      }
+    ],
+    "connections": [
+      {
+        "name": "connection1",
+        "pointsToConnect": [
+          { "x": 0, "y": 0, "layer": "top" },
+          { "x": 10, "y": 10, "layer": "top" }
+        ]
+      }
+    ],
+    "bounds": {
+      "minX": 0,
+      "maxX": 100,
+      "minY": 0,
+      "maxY": 100
+    },
+    "traces": [
+      {
+        "type": "pcb_trace",
+        "pcb_trace_id": "trace1",
+        "route": [
+          {
+            "route_type": "wire",
+            "x": 0,
+            "y": 0,
+            "width": 0.5,
+            "layer": "top"
+          },
+          {
+            "route_type": "via",
+            "x": 10,
+            "y": 10,
+            "to_layer": "bottom",
+            "from_layer": "top"
+          }
+        ]
+      }
+    ]
+  }
