@@ -14,3 +14,6 @@ A web-based viewer for [Circuit JSON](https://github.com/tscircuit/circuit-json)
 
 - Built by [tscircuit](https://github.com/tscircuit/tscircuit)
 - Uses [runframe](https://github.com/tscircuit/runframe) package for visualizing Circuit JSON files
+
+
+<!-- VTT SOVEREIGN ENGINE: BOUNTY HARVEST FOR ISSUE 79 -->
