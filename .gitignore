@@ -1,5 +1,8 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 
+# Bun lockfile (disabled via bunfig.toml [install.lockfile] save = false)
+bun.lock
+
 # Logs
 
 logs
