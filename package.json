@@ -38,6 +38,7 @@
     "@tscircuit/circuit-json-util": "^0.0.94",
     "@tscircuit/create-snippet-url": "^0.0.14",
     "@tscircuit/pcb-viewer": "^1.11.370",
+    "@tscircuit/runframe": "^0.0.1982",
     "@tscircuit/schematic-viewer": "^2.0.61",
     "buffer": "^6.0.3",
     "circuit-json": "^0.0.426",
