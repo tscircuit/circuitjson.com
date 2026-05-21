@@ -177,3 +177,7 @@ dist
 .vercel
 .agent
 .agents
+
+# Bun lockfiles are intentionally disabled by bunfig.toml for Vercel deploys.
+bun.lock
+bun.lockb
