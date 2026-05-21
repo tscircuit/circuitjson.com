@@ -1,0 +1,4 @@
+{
+  "installCommand": "bun install --no-save",
+  "buildCommand": "bun run build"
+}
