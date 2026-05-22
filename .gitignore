@@ -177,3 +177,7 @@ dist
 .vercel
 .agent
 .agents
+
+# Bun
+bun.lock
+bun.lockb
