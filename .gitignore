@@ -168,6 +168,10 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Bun lockfiles are disabled by bunfig.toml for deployment parity.
+bun.lock
+bun.lockb
+
 # IntelliJ based IDEs
 .idea
 
