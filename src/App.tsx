@@ -1,9 +1,41 @@
-import { useCallback, useRef, useState } from "react"
-import { useStore } from "./store"
 import { CircuitJsonPreview } from "@tscircuit/runframe"
 import type { AnyCircuitElement } from "circuit-json"
-import type { SimpleRouteJson } from "tscircuit"
+import { useCallback, useRef, useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
+import type { SimpleRouteJson } from "tscircuit"
+import exampleCircuitJsonUrl from "../assets/usb-c-flashlight.json?url"
+import { useStore } from "./store"
+
+const convertSimpleRouteJsonToCircuitJson = (
+  simpleRouteJson: SimpleRouteJson,
+): AnyCircuitElement[] => {
+  const circuitJson: AnyCircuitElement[] = []
+
+  for (const connection of simpleRouteJson.connections) {
+    const trace: AnyCircuitElement = {
+      type: "pcb_trace",
+      pcb_trace_id: connection.name,
+      route: connection.pointsToConnect.map((point) => ({
+        route_type: "wire",
+        x: point.x,
+        y: point.y,
+        layer: point.layer as
+          | "top"
+          | "bottom"
+          | "inner1"
+          | "inner2"
+          | "inner3"
+          | "inner4"
+          | "inner5"
+          | "inner6",
+        width: simpleRouteJson.minTraceWidth,
+      })),
+    }
+    circuitJson.push(trace)
+  }
+
+  return circuitJson
+}
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
@@ -11,37 +43,6 @@ export const App = () => {
   const reset = useStore((s) => s.reset)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-
-  const convertSimpleRouteJsonToCircuitJson = (
-    simpleRouteJson: SimpleRouteJson,
-  ): AnyCircuitElement[] => {
-    const circuitJson: AnyCircuitElement[] = []
-
-    for (const connection of simpleRouteJson.connections) {
-      const trace: AnyCircuitElement = {
-        type: "pcb_trace",
-        pcb_trace_id: connection.name,
-        route: connection.pointsToConnect.map((point) => ({
-          route_type: "wire",
-          x: point.x,
-          y: point.y,
-          layer: point.layer as
-            | "top"
-            | "bottom"
-            | "inner1"
-            | "inner2"
-            | "inner3"
-            | "inner4"
-            | "inner5"
-            | "inner6",
-          width: simpleRouteJson.minTraceWidth,
-        })),
-      }
-      circuitJson.push(trace)
-    }
-
-    return circuitJson
-  }
 
   const loadJsonString = useCallback(
     (jsonString: string) => {
@@ -150,6 +151,7 @@ export const App = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
+                  <title>Invalid JSON</title>
                   <circle cx="12" cy="12" r="10" />
                   <line x1="12" y1="8" x2="12" y2="12" />
                   <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -217,7 +219,8 @@ export const App = () => {
       <p className="text-gray-400 mt-4">
         View{" "}
         <a
-          href="https://github.com/tscircuit/circuitjson.com/blob/main/assets/usb-c-flashlight.json"
+          href={exampleCircuitJsonUrl}
+          download="usb-c-flashlight.json"
           className="text-blue-400 hover:text-blue-300"
         >
           example circuit json file
