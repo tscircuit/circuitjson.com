@@ -1,9 +1,41 @@
 import { useCallback, useRef, useState } from "react"
+import { RunFrameCircuitJsonViewer } from "./RunFrameCircuitJsonViewer"
 import { useStore } from "./store"
-import { CircuitJsonPreview } from "@tscircuit/runframe"
-import type { AnyCircuitElement } from "circuit-json"
-import type { SimpleRouteJson } from "tscircuit"
-import { ErrorBoundary } from "react-error-boundary"
+
+interface SimpleRouteJson {
+  connections: Array<{
+    name: string
+    pointsToConnect: Array<{
+      x: number
+      y: number
+      layer: string
+    }>
+  }>
+  minTraceWidth: number
+}
+
+const convertSimpleRouteJsonToCircuitJson = (
+  simpleRouteJson: SimpleRouteJson,
+): Array<Record<string, unknown>> => {
+  const circuitJson: Array<Record<string, unknown>> = []
+
+  for (const connection of simpleRouteJson.connections) {
+    const trace = {
+      type: "pcb_trace",
+      pcb_trace_id: connection.name,
+      route: connection.pointsToConnect.map((point) => ({
+        route_type: "wire",
+        x: point.x,
+        y: point.y,
+        layer: point.layer,
+        width: simpleRouteJson.minTraceWidth,
+      })),
+    }
+    circuitJson.push(trace)
+  }
+
+  return circuitJson
+}
 
 export const App = () => {
   const circuitJson = useStore((s) => s.circuitJson)
@@ -11,37 +43,6 @@ export const App = () => {
   const reset = useStore((s) => s.reset)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-
-  const convertSimpleRouteJsonToCircuitJson = (
-    simpleRouteJson: SimpleRouteJson,
-  ): AnyCircuitElement[] => {
-    const circuitJson: AnyCircuitElement[] = []
-
-    for (const connection of simpleRouteJson.connections) {
-      const trace: AnyCircuitElement = {
-        type: "pcb_trace",
-        pcb_trace_id: connection.name,
-        route: connection.pointsToConnect.map((point) => ({
-          route_type: "wire",
-          x: point.x,
-          y: point.y,
-          layer: point.layer as
-            | "top"
-            | "bottom"
-            | "inner1"
-            | "inner2"
-            | "inner3"
-            | "inner4"
-            | "inner5"
-            | "inner6",
-          width: simpleRouteJson.minTraceWidth,
-        })),
-      }
-      circuitJson.push(trace)
-    }
-
-    return circuitJson
-  }
 
   const loadJsonString = useCallback(
     (jsonString: string) => {
@@ -141,6 +142,7 @@ export const App = () => {
               <p className="text-red-400 text-sm mb-3 flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                   width="16"
                   height="16"
                   viewBox="0 0 24 24"
@@ -182,35 +184,7 @@ export const App = () => {
             </button>
           </div>
           <div className="bg-gray-800/50 p-4 rounded-md flex-1 min-h-0">
-            <ErrorBoundary
-              fallbackRender={({ error, resetErrorBoundary }) => (
-                <div className="h-full flex flex-col items-center justify-center p-6 text-center">
-                  <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-6 max-w-lg w-full">
-                    <h3 className="text-xl font-bold text-red-400 mb-2">
-                      Error Rendering Circuit
-                    </h3>
-                    <p className="text-gray-300 text-sm mb-4">
-                      The provided Circuit JSON could not be rendered.
-                    </p>
-                    <div className="bg-gray-950 p-4 rounded text-left overflow-auto mb-4 border border-red-900/30 text-red-300 font-mono text-xs max-h-40 break-words whitespace-pre-wrap">
-                      {error instanceof Error ? error.message : String(error)}
-                    </div>
-                    <button
-                      onClick={() => {
-                        resetErrorBoundary()
-                        reset()
-                      }}
-                      className="bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-200 px-4 py-2 rounded-md focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-red-400 transition-colors font-medium w-full sm:w-auto"
-                      type="button"
-                    >
-                      Reset Viewer
-                    </button>
-                  </div>
-                </div>
-              )}
-            >
-              <CircuitJsonPreview circuitJson={circuitJson} />
-            </ErrorBoundary>
+            <RunFrameCircuitJsonViewer circuitJson={circuitJson} />
           </div>
         </div>
       )}
