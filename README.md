@@ -13,4 +13,4 @@ A web-based viewer for [Circuit JSON](https://github.com/tscircuit/circuit-json)
 ## Acknowledgments
 
 - Built by [tscircuit](https://github.com/tscircuit/tscircuit)
-- Uses [runframe](https://github.com/tscircuit/runframe) package for visualizing Circuit JSON files
+- Loads the latest [runframe](https://github.com/tscircuit/runframe) standalone preview inside an iframe
