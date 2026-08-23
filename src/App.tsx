@@ -97,6 +97,19 @@ export const App = () => {
     [loadJsonString],
   )
 
+  const loadExample = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "https://raw.githubusercontent.com/tscircuit/circuitjson.com/main/assets/usb-c-flashlight.json",
+      )
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      const text = await response.text()
+      loadJsonString(text)
+    } catch (err) {
+      setErrorMsg("Failed to load example file. Please try again.")
+    }
+  }, [loadJsonString])
+
   return (
     <div
       className="h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4"
@@ -122,6 +135,13 @@ export const App = () => {
                 Choose File
               </span>
             </label>
+            <button
+              onClick={loadExample}
+              className="mt-4 ml-3 bg-blue-700 px-4 py-2 rounded-md hover:bg-blue-600 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-blue-400 transition-colors"
+              type="button"
+            >
+              Load Example
+            </button>
           </div>
 
           <div className="text-left bg-gray-800/80 p-6 rounded-lg border border-gray-700 shadow-xl">
@@ -189,9 +209,10 @@ export const App = () => {
         </div>
       )}
       <p className="text-gray-400 mt-4">
-        View{" "}
+        Download{" "}
         <a
-          href="https://github.com/tscircuit/circuitjson.com/blob/main/assets/usb-c-flashlight.json"
+          href="https://raw.githubusercontent.com/tscircuit/circuitjson.com/main/assets/usb-c-flashlight.json"
+          download="usb-c-flashlight.json"
           className="text-blue-400 hover:text-blue-300"
         >
           example circuit json file
